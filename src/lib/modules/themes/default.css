@@ -1,0 +1,92 @@
+.invoice {
+	@apply h-full bg-orange-50 relative;
+}
+
+.invoice > header {
+	@apply px-20 pt-16 pb-8 flex;
+}
+
+.title {
+	@apply ml-auto uppercase text-5xl font-serif;
+}
+
+.metadata {
+	@apply flex items-center justify-between px-20 pb-12;
+}
+
+.recipient h2 {
+	@apply uppercase font-bold mb-4;
+}
+
+.recipient address {
+	@apply not-italic;
+}
+
+.info {
+	@apply text-right;
+}
+
+.item-list {
+	@apply px-20;
+}
+
+.item-list table {
+	@apply w-full;
+}
+
+.item-list table thead {
+	@apply text-left;
+}
+
+.item-list table thead tr {
+	@apply border-b border-t-2 border-solid border-black;
+}
+
+.item-list table thead tr th {
+	@apply py-2;
+}
+
+.item-list table tbody tr.entry {
+	@apply border-b border-solid border-black;
+}
+
+.item-list table tbody tr.entry td:first-of-type {
+	@apply max-w-[280px];
+}
+
+.item-list table tbody tr.entry td {
+	@apply py-2 pr-2;
+}
+
+.item-list table tbody tr td span {
+	@apply text-xs;
+}
+
+.item-list table tbody tr td.subtotal,
+.item-list table tbody tr td.tax {
+	@apply font-semibold py-3;
+}
+
+.item-list table tbody tr td.total {
+	@apply font-bold text-lg py-3 border-t border-solid border-black;
+}
+
+.bottom-container {
+	@apply px-20 pb-16 -mt-8;
+}
+
+.thanks {
+	@apply text-3xl mb-12;
+}
+
+footer {
+	@apply flex items-end justify-between;
+}
+
+footer .payment-info h2 {
+	@apply font-semibold uppercase mb-4;
+}
+
+footer .issuer-info .name {
+	@apply text-2xl text-right;
+}
