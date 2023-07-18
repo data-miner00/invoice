@@ -12,6 +12,8 @@
 	} from '$lib/shared/shared.types';
 	import { formatDate, formatIndex } from '$lib/shared/shared.utils';
 	import '$lib/modules/themes/default.css';
+	import Toolbar from '$lib/modules/toolbar/toolbar.svelte';
+	import { CrossIcon, PlusIcon, CheckIcon } from '$lib/shared/icons';
 
 	let invoice: Invoice = {
 		index: 1,
@@ -94,8 +96,30 @@
 
 	$: taxAmt = (subtotal * invoice.tax) / 100;
 	$: total = subtotal + taxAmt;
+
+	function addItem(_: Event) {
+		items = [
+			...items,
+			{
+				name: newItemName,
+				quantity: newItemQuantity,
+				unitPrice: newItemUnitPrice
+			}
+		];
+	}
+
+	let isEntryInputOpen = false;
+	let newItemName = '';
+	let newItemQuantity = 1;
+	let newItemUnitPrice = 0;
+	$: newItemTotalPrice = newItemQuantity * newItemUnitPrice;
+
+	function toggleEntryInput() {
+		isEntryInputOpen = !isEntryInputOpen;
+	}
 </script>
 
+<Toolbar />
 <svelte:head>
 	<title>Invoice</title>
 	<meta name="description" content="Next-gen Invoice Generator" />
@@ -141,6 +165,54 @@
 						<td><span>{invoice.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
 					</tr>
 				{/each}
+
+				{#if isEntryInputOpen}
+					<tr class="entry-input-group" on:keyup={console.log}>
+						<td>
+							<input
+								type="text"
+								name="entry-name"
+								placeholder="Insert item name"
+								on:input={(e) => {
+									newItemName = e.currentTarget.value;
+								}}
+							/>
+						</td>
+						<td>
+							<input
+								type="number"
+								name="quantity"
+								on:input={(e) => {
+									newItemQuantity = e.currentTarget.valueAsNumber;
+								}}
+							/>
+						</td>
+						<td>
+							<span class="block my-auto">{invoice.currency.symbol}</span>
+							<input
+								type="number"
+								name="unit-price"
+								on:input={(e) => {
+									newItemUnitPrice = e.currentTarget.valueAsNumber;
+								}}
+							/>
+						</td>
+						<td><span>{invoice.currency.symbol}</span>{newItemTotalPrice}</td>
+						<div class="input-group-control">
+							<button on:click={addItem}><CheckIcon size={20} /></button>
+							<button on:click={toggleEntryInput}><CrossIcon size={18} /></button>
+						</div>
+					</tr>
+				{:else}
+					<tr>
+						<td colspan="4">
+							<button class="add-button" on:click={toggleEntryInput}>
+								<PlusIcon />
+							</button>
+						</td>
+					</tr>
+				{/if}
+
 				<tr>
 					<td />
 					<td />

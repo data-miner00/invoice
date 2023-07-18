@@ -71,6 +71,14 @@
 	@apply font-bold text-lg py-3 border-t border-solid border-black;
 }
 
+.item-list table tbody tr td input {
+	@apply w-[50px] block;
+}
+
+.item-list table tbody tr td:first-of-type input {
+	@apply w-full;
+}
+
 .bottom-container {
 	@apply px-20 pb-16 -mt-8;
 }
@@ -89,4 +97,28 @@ footer .payment-info h2 {
 
 footer .issuer-info .name {
 	@apply text-2xl text-right;
+}
+
+tr.entry-input-group {
+	@apply bg-orange-100 relative;
+}
+
+tr.entry-input-group td:nth-of-type(3) {
+	@apply flex py-2;
+}
+
+tr.entry-input-group input {
+	@apply bg-transparent py-1 focus:outline outline-gray-400;
+}
+
+tr.entry-input-group .input-group-control {
+	@apply absolute top-2 -right-[70px] flex items-center gap-1;
+}
+
+tr.entry-input-group .input-group-control button {
+	@apply h-8 w-8 flex items-center justify-center rounded hover:bg-white/80;
+}
+
+.add-button {
+	@apply mx-auto block p-1 border-gray-500 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500;
 }
