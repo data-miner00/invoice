@@ -1,5 +1,3 @@
-<h1>Hello</h1>
-
 <ul>
 	<li>Create User</li>
 	<li>Change User</li>

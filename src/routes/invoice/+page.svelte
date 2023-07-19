@@ -1,111 +1,33 @@
 <script lang="ts">
-	import type {
-		Address,
-		BankAccount,
-		BillingItem,
-		AppSettings,
-		InvoiceTemplate,
-		Company,
-		Individual,
-		Invoice,
-		BillingRecipient
-	} from '$lib/shared/shared.types';
 	import { formatDate, formatIndex } from '$lib/shared/shared.utils';
 	import '$lib/modules/themes/default.css';
 	import Toolbar from '$lib/modules/toolbar/toolbar.svelte';
 	import { CrossIcon, PlusIcon, CheckIcon } from '$lib/shared/icons';
+	import { invoice$, individuals$, billingRecipient$, items$ } from '$lib/shared/shared.store';
 
-	let invoice: Invoice = {
-		index: 1,
-		date: new Date(),
-		tax: 0,
-		NoFmt: '',
-		currency: {
-			symbol: 'RM',
-			code: 'MYR',
-			country: 'Malaysia'
-		}
-	};
+	$: formattedInvoiceNo = formatIndex($invoice$.index, 'A', 4);
+	$: formattedDate = formatDate($invoice$.date);
 
-	$: formattedInvoiceNo = formatIndex(invoice.index, 'A', 4);
-	$: formattedDate = formatDate(invoice.date);
+	$: individual = $individuals$.at(0)!;
 
-	let individual: Individual = {
-		name: 'Hazel Nguyen',
-		address: {
-			firstLine: 'XXX',
-			secondLine: 'XXX',
-			thirdLine: 'XXX',
-			postcode: '23500',
-			state: 'Southampton',
-			country: 'USA',
-			shortened: '71 Cherry Court Southhampton, UK'
-		},
-		phoneNo: '+231 433 2342',
-		bankAccount: {
-			bankName: 'Hilton Bank',
-			bankCountry: 'South Africa',
-			accountHolder: 'Hazel Nguyen',
-			accountNo: '63534283736'
-		}
-	};
+	$: billingReceiver = $billingRecipient$;
 
-	let billingReceiver: BillingRecipient = {
-		name: 'Steven Jones',
-		address: {
-			firstLine: 'XXX',
-			secondLine: 'XXX',
-			thirdLine: 'XXX',
-			postcode: '50000',
-			state: 'Singapore',
-			country: 'Singapore',
-			shortened: 'No. 4, Orchard Road, Singapore.'
-		},
-		phoneNo: '+6510-01010100'
-	};
+	$: subtotal = $items$.map((x) => x.quantity * x.unitPrice).reduce((x, y) => x + y);
 
-	let items: BillingItem[] = [
-		{
-			name: '3B Sports Icon Medium Fit Tracksuit Jacket Double XL Premium Edition',
-			quantity: 8,
-			unitPrice: 125
-		},
-		{
-			name: 'Bootcut Pants',
-			quantity: 23,
-			unitPrice: 10
-		},
-		{
-			name: 'Crystal Mesh Top',
-			quantity: 1,
-			unitPrice: 300
-		},
-		{
-			name: "Medieval Knight's Armor",
-			quantity: 1,
-			unitPrice: 270
-		},
-		{
-			name: 'Outline Tracksuit Jacket',
-			quantity: 1,
-			unitPrice: 200
-		}
-	];
-
-	$: subtotal = items.map((x) => x.quantity * x.unitPrice).reduce((x, y) => x + y);
-
-	$: taxAmt = (subtotal * invoice.tax) / 100;
+	$: taxAmt = (subtotal * $invoice$.tax) / 100;
 	$: total = subtotal + taxAmt;
 
 	function addItem(_: Event) {
-		items = [
+		items$.update((items) => [
 			...items,
 			{
 				name: newItemName,
 				quantity: newItemQuantity,
 				unitPrice: newItemUnitPrice
 			}
-		];
+		]);
+
+		resetInput();
 	}
 
 	let isEntryInputOpen = false;
@@ -117,9 +39,16 @@
 	function toggleEntryInput() {
 		isEntryInputOpen = !isEntryInputOpen;
 	}
+
+	function resetInput() {
+		newItemName = '';
+		newItemQuantity = 0;
+		newItemUnitPrice = 0;
+	}
 </script>
 
 <Toolbar />
+
 <svelte:head>
 	<title>Invoice</title>
 	<meta name="description" content="Next-gen Invoice Generator" />
@@ -157,12 +86,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each items as item}
+				{#each $items$ as item}
 					<tr class="entry">
 						<td>{item.name}</td>
 						<td>{item.quantity}</td>
-						<td><span>{invoice.currency.symbol}</span>{item.unitPrice}</td>
-						<td><span>{invoice.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
+						<td><span>{$invoice$.currency.symbol}</span>{item.unitPrice}</td>
+						<td><span>{$invoice$.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
 					</tr>
 				{/each}
 
@@ -188,7 +117,7 @@
 							/>
 						</td>
 						<td>
-							<span class="block my-auto">{invoice.currency.symbol}</span>
+							<span class="block my-auto">{$invoice$.currency.symbol}</span>
 							<input
 								type="number"
 								name="unit-price"
@@ -197,7 +126,7 @@
 								}}
 							/>
 						</td>
-						<td><span>{invoice.currency.symbol}</span>{newItemTotalPrice}</td>
+						<td><span>{$invoice$.currency.symbol}</span>{newItemTotalPrice}</td>
 						<div class="input-group-control">
 							<button on:click={addItem}><CheckIcon size={20} /></button>
 							<button on:click={toggleEntryInput}><CrossIcon size={18} /></button>
@@ -217,19 +146,19 @@
 					<td />
 					<td />
 					<td class="subtotal">Subtotal</td>
-					<td><span>{invoice.currency.symbol}</span>{subtotal}</td>
+					<td><span>{$invoice$.currency.symbol}</span>{subtotal}</td>
 				</tr>
 				<tr>
 					<td />
 					<td />
-					<td class="tax">Tax ({invoice.tax}%)</td>
-					<td><span>{invoice.currency.symbol}</span>{taxAmt}</td>
+					<td class="tax">Tax ({$invoice$.tax}%)</td>
+					<td><span>{$invoice$.currency.symbol}</span>{taxAmt}</td>
 				</tr>
 				<tr>
 					<td />
 					<td />
 					<td class="total">Total</td>
-					<td class="total">{invoice.currency.symbol}{total}</td>
+					<td class="total">{$invoice$.currency.symbol}{total}</td>
 				</tr>
 			</tbody>
 		</table>
