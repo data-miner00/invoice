@@ -21,7 +21,7 @@
 		items$.update((items) => [
 			...items,
 			{
-				id: items.length,
+				id: (items.at(-1)?.id ?? 0) + 1,
 				name: newItemName,
 				quantity: newItemQuantity,
 				unitPrice: newItemUnitPrice
@@ -45,6 +45,12 @@
 		newItemName = '';
 		newItemQuantity = 0;
 		newItemUnitPrice = 0;
+	}
+
+	function editItem() {}
+
+	function removeItem(id: number) {
+		items$.update((items) => items.filter((x) => x.id !== id));
 	}
 </script>
 
@@ -93,6 +99,10 @@
 						<td>{item.quantity}</td>
 						<td><span>{$invoice$.currency.symbol}</span>{item.unitPrice}</td>
 						<td><span>{$invoice$.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
+						<div class="entry-actions">
+							<button on:click={editItem}><CheckIcon size={20} /></button>
+							<button on:click={() => removeItem(item.id)}><CrossIcon size={18} /></button>
+						</div>
 					</tr>
 				{/each}
 
