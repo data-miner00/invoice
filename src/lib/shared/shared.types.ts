@@ -26,6 +26,7 @@ export type Company = {
 export type Individual = Omit<Company, 'registrationNo'>;
 
 export type BillingItem = {
+	id: number;
 	name: string;
 	quantity: number;
 	unitPrice: number;

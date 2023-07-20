@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store';
+import { writable, type Writable, derived } from 'svelte/store';
 import type { BillingItem, BillingRecipient, Company, Individual, Invoice } from './shared.types';
 
 export const invoice$: Writable<Invoice> = writable<Invoice>({
@@ -53,26 +53,31 @@ export const billingRecipient$: Writable<BillingRecipient> = writable<BillingRec
 
 export const items$: Writable<BillingItem[]> = writable<BillingItem[]>([
 	{
+		id: 0,
 		name: '3B Sports Icon Medium Fit Tracksuit Jacket Double XL Premium Edition',
 		quantity: 8,
 		unitPrice: 125
 	},
 	{
+		id: 1,
 		name: 'Bootcut Pants',
 		quantity: 23,
 		unitPrice: 10
 	},
 	{
+		id: 2,
 		name: 'Crystal Mesh Top',
 		quantity: 1,
 		unitPrice: 300
 	},
 	{
+		id: 3,
 		name: "Medieval Knight's Armor",
 		quantity: 1,
 		unitPrice: 270
 	},
 	{
+		id: 4,
 		name: 'Outline Tracksuit Jacket',
 		quantity: 1,
 		unitPrice: 200

@@ -21,6 +21,7 @@
 		items$.update((items) => [
 			...items,
 			{
+				id: items.length,
 				name: newItemName,
 				quantity: newItemQuantity,
 				unitPrice: newItemUnitPrice
