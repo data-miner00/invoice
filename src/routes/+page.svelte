@@ -1,5 +1,6 @@
 <script lang="ts">
 	import IndividualForm from '$lib/modules/forms/individual.form.svelte';
+	import BillingRecipientForm from '$lib/modules/forms/billingRecipient.form.svelte';
 </script>
 
 <ul class="p-32">
@@ -11,3 +12,5 @@
 </ul>
 
 <IndividualForm />
+
+<BillingRecipientForm />
