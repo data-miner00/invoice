@@ -31,6 +31,7 @@
 		resetInput();
 	}
 
+	let isEditing = false;
 	let isEntryInputOpen = false;
 	let newItemName = '';
 	let newItemQuantity = 1;
@@ -54,7 +55,7 @@
 	}
 </script>
 
-<Toolbar />
+<Toolbar bind:isEditing />
 
 <svelte:head>
 	<title>Invoice</title>
@@ -99,58 +100,62 @@
 						<td>{item.quantity}</td>
 						<td><span>{$invoice$.currency.symbol}</span>{item.unitPrice}</td>
 						<td><span>{$invoice$.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
-						<div class="entry-actions">
-							<button on:click={editItem}><CheckIcon size={20} /></button>
-							<button on:click={() => removeItem(item.id)}><CrossIcon size={18} /></button>
-						</div>
+						{#if isEditing}
+							<div class="entry-actions">
+								<button on:click={editItem}><CheckIcon size={20} /></button>
+								<button on:click={() => removeItem(item.id)}><CrossIcon size={18} /></button>
+							</div>
+						{/if}
 					</tr>
 				{/each}
 
-				{#if isEntryInputOpen}
-					<tr class="entry-input-group" on:keyup={console.log}>
-						<td>
-							<input
-								type="text"
-								name="entry-name"
-								placeholder="Insert item name"
-								on:input={(e) => {
-									newItemName = e.currentTarget.value;
-								}}
-							/>
-						</td>
-						<td>
-							<input
-								type="number"
-								name="quantity"
-								on:input={(e) => {
-									newItemQuantity = e.currentTarget.valueAsNumber;
-								}}
-							/>
-						</td>
-						<td>
-							<span class="block my-auto">{$invoice$.currency.symbol}</span>
-							<input
-								type="number"
-								name="unit-price"
-								on:input={(e) => {
-									newItemUnitPrice = e.currentTarget.valueAsNumber;
-								}}
-							/>
-						</td>
-						<td><span>{$invoice$.currency.symbol}</span>{newItemTotalPrice}</td>
-						<div class="input-group-control">
-							<button on:click={addItem}><CheckIcon size={20} /></button>
-							<button on:click={toggleEntryInput}><CrossIcon size={18} /></button>
-						</div>
-					</tr>
-				{:else}
-					<tr>
-						<td colspan="4">
-							<button class="add-button" on:click={toggleEntryInput}>
-								<PlusIcon />
-							</button>
-						</td>
-					</tr>
+				{#if isEditing}
+					{#if isEntryInputOpen}
+						<tr class="entry-input-group" on:keyup={console.log}>
+							<td>
+								<input
+									type="text"
+									name="entry-name"
+									placeholder="Insert item name"
+									on:input={(e) => {
+										newItemName = e.currentTarget.value;
+									}}
+								/>
+							</td>
+							<td>
+								<input
+									type="number"
+									name="quantity"
+									on:input={(e) => {
+										newItemQuantity = e.currentTarget.valueAsNumber;
+									}}
+								/>
+							</td>
+							<td>
+								<span class="block my-auto">{$invoice$.currency.symbol}</span>
+								<input
+									type="number"
+									name="unit-price"
+									on:input={(e) => {
+										newItemUnitPrice = e.currentTarget.valueAsNumber;
+									}}
+								/>
+							</td>
+							<td><span>{$invoice$.currency.symbol}</span>{newItemTotalPrice}</td>
+							<div class="input-group-control">
+								<button on:click={addItem}><CheckIcon size={20} /></button>
+								<button on:click={toggleEntryInput}><CrossIcon size={18} /></button>
+							</div>
+						</tr>
+					{:else}
+						<tr>
+							<td colspan="4">
+								<button class="add-button" on:click={toggleEntryInput}>
+									<PlusIcon />
+								</button>
+							</td>
+						</tr>
+					{/if}
 				{/if}
 
 				<tr>

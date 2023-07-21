@@ -17,7 +17,7 @@
 
 		console.log(individual);
 
-		individuals$.update((_) => [individual]);
+		individuals$.set([individual]);
 	}
 </script>
 
