@@ -34,27 +34,39 @@ export type BillingItem = {
 
 export type BillingRecipient = Omit<Individual, 'bankAccount'>;
 
+// Settings - Default Values
 export type AppSettings = {
 	tax: number;
 	template: string;
 	theme: string;
 };
 
-export type InvoiceTemplate = {
-	theme: string;
-	isTaxEnabled: boolean;
+export type InvoiceNo = {
+	index: number;
+	prefix: string;
 };
 
 export type Invoice = {
-	index: number;
-	NoFmt: string;
+	invoiceNo: InvoiceNo;
 	date: Date;
-	tax: number;
+	dueDate?: Date;
 	currency: Currency;
+	payable: Payable;
 };
 
 export type Currency = {
 	symbol: string;
 	code: string;
 	country: string;
+};
+
+export type Payable = {
+	tax: Amount;
+	discount: Amount;
+	shippingFee: Amount;
+};
+
+export type Amount = {
+	amount: number;
+	mode: 'percentage' | 'literal';
 };

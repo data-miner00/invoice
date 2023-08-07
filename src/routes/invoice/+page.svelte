@@ -5,7 +5,7 @@
 	import { CrossIcon, PlusIcon, CheckIcon } from '$lib/shared/icons';
 	import { invoice$, individuals$, billingRecipient$, items$ } from '$lib/shared/shared.store';
 
-	$: formattedInvoiceNo = formatIndex($invoice$.index, 'A', 4);
+	$: formattedInvoiceNo = formatIndex($invoice$.invoiceNo.index, $invoice$.invoiceNo.prefix, 4);
 	$: formattedDate = formatDate($invoice$.date);
 
 	$: individual = $individuals$.at(0)!;
@@ -14,7 +14,7 @@
 
 	$: subtotal = $items$.map((x) => x.quantity * x.unitPrice).reduce((x, y) => x + y);
 
-	$: taxAmt = (subtotal * $invoice$.tax) / 100;
+	$: taxAmt = (subtotal * $invoice$.payable.tax.amount) / 100;
 	$: total = subtotal + taxAmt;
 
 	function addItem(_: Event) {
@@ -167,7 +167,7 @@
 				<tr>
 					<td />
 					<td />
-					<td class="tax">Tax ({$invoice$.tax}%)</td>
+					<td class="tax">Tax ({$invoice$.payable.tax.amount}%)</td>
 					<td><span>{$invoice$.currency.symbol}</span>{taxAmt}</td>
 				</tr>
 				<tr>

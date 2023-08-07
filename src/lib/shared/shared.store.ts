@@ -2,10 +2,25 @@ import { writable, type Writable, derived } from 'svelte/store';
 import type { BillingItem, BillingRecipient, Company, Individual, Invoice } from './shared.types';
 
 export const invoice$: Writable<Invoice> = writable<Invoice>({
-	index: 1,
+	invoiceNo: {
+		index: 1,
+		prefix: 'A'
+	},
 	date: new Date(),
-	tax: 0,
-	NoFmt: '',
+	payable: {
+		tax: {
+			mode: 'percentage',
+			amount: 0
+		},
+		discount: {
+			mode: 'percentage',
+			amount: 0
+		},
+		shippingFee: {
+			mode: 'percentage',
+			amount: 0
+		}
+	},
 	currency: {
 		symbol: 'RM',
 		code: 'MYR',
