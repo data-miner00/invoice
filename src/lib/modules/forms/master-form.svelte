@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Address, BankAccount } from '$lib/shared/shared.types';
+	import type { Address, BankAccount, BillingItem } from '$lib/shared/shared.types';
 
 	let fromName: string;
 	let fromPhone: string;
@@ -19,14 +19,60 @@
 	let tax: number;
 	let discount: number;
 	let shippingFee: number;
+	let billingItems: Array<BillingItem> = [];
 
 	let form: HTMLFormElement;
+	let addItemForm: HTMLFormElement;
 	let invoiceDateInput: HTMLInputElement;
 	let dueDateInput: HTMLInputElement;
+
+	let itemNameInput: HTMLInputElement;
+	let itemQuantityInput: HTMLInputElement;
+	let itemUnitPriceInput: HTMLInputElement;
 
 	function onSubmit(_: Event) {
 		const formData = new FormData(form);
 		formData.forEach((val, key) => console.log(val, ' ', key));
+
+		const info = {
+			metadata: {
+				invoiceNumber,
+				purchaseOrder,
+				currency,
+				tax,
+				discount,
+				shippingFee,
+				invoiceDate,
+				dueDate,
+				notes
+			},
+			issuer: {
+				name: fromName,
+				phone: fromPhone,
+				address: fromAddress
+			},
+			receiver: {
+				name: toName,
+				phone: toPhone,
+				address: toAddress
+			}
+		};
+
+		console.log(info);
+	}
+
+	function addItem() {
+		billingItems = [
+			...billingItems,
+			{
+				id: 0,
+				name: itemNameInput.value,
+				quantity: itemQuantityInput.valueAsNumber,
+				unitPrice: itemUnitPriceInput.valueAsNumber
+			}
+		];
+
+		addItemForm.reset();
 	}
 
 	onMount(() => {
@@ -37,54 +83,58 @@
 <form
 	bind:this={form}
 	on:submit|preventDefault={onSubmit}
-	class="border-gray-200 rounded border-solid border"
+	class="border-gray-200 rounded border-solid border p-4 overflow-hidden"
 >
-	<div class="flex gap-4">
-		<div class="flex flex-col w-40">
-			<label for="invoice-no" class="mb-2">Invoice number</label>
-			<input
-				bind:value={invoiceNumber}
-				type="text"
-				name="invoice-no"
-				class="border-gray-700 border-solid border rounded-lg py-2 px-3 focus:outline-dotted"
-				required
-			/>
+	<fieldset>
+		<legend>General</legend>
+		<div class="flex gap-4">
+			<div class="flex flex-col w-40">
+				<label for="invoice-no" class="mb-2">Invoice number</label>
+				<input bind:value={invoiceNumber} type="text" name="invoice-no" required />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="purchase-no" class="mb-2">Purchase number</label>
+				<input bind:value={purchaseOrder} type="text" name="purchase-no" required />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="invoice-no" class="mb-2">Invoice date</label>
+				<input
+					bind:this={invoiceDateInput}
+					bind:value={invoiceDate}
+					type="date"
+					name="invoice-no"
+					required
+				/>
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="purchase-no" class="mb-2">Due date</label>
+				<input bind:this={dueDateInput} bind:value={dueDate} type="date" name="due-date" required />
+			</div>
 		</div>
-		<div class="flex flex-col w-40">
-			<label for="purchase-no" class="mb-2">Purchase number</label>
-			<input
-				bind:value={purchaseOrder}
-				type="text"
-				name="purchase-no"
-				class="border-gray-700 border-solid border rounded-lg py-2 px-3 focus:outline-dotted"
-				required
-			/>
+		<div class="flex gap-4">
+			<div class="flex flex-col w-40">
+				<label for="notes">Notes</label>
+				<input bind:value={notes} name="notes" type="text" />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="tax">Tax</label>
+				<input bind:value={tax} name="tax" type="text" />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="discount">Discount</label>
+				<input bind:value={discount} name="discount" type="text" />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="shipping-fee">Shipping fee</label>
+				<input bind:value={shippingFee} name="shipping-fee" type="text" />
+			</div>
+			<div class="flex flex-col w-40">
+				<label for="currency">Currency</label>
+				<input bind:value={currency} name="currency" type="text" />
+			</div>
 		</div>
-	</div>
-	<div class="flex gap-4">
-		<div class="flex flex-col w-40">
-			<label for="invoice-no" class="mb-2">Invoice date</label>
-			<input
-				bind:this={invoiceDateInput}
-				bind:value={invoiceDate}
-				type="date"
-				name="invoice-no"
-				class="border-gray-700 border-solid border rounded-lg py-2 px-3 focus:outline-dotted"
-				required
-			/>
-		</div>
-		<div class="flex flex-col w-40">
-			<label for="purchase-no" class="mb-2">Due date</label>
-			<input
-				bind:this={dueDateInput}
-				bind:value={dueDate}
-				type="date"
-				name="due-date"
-				class="border-gray-700 border-solid border rounded-lg py-2 px-3 focus:outline-dotted"
-				required
-			/>
-		</div>
-	</div>
+	</fieldset>
+
 	<fieldset class="border border-solid border-pink-200">
 		<legend>Invoice Issuer</legend>
 
@@ -251,36 +301,62 @@
 					</div>
 				</div>
 			</fieldset>
-
-			<div class="flex gap-4">
-				<div class="flex flex-col w-40">
-					<label for="notes">Notes</label>
-					<input bind:value={notes} name="notes" type="text" />
-				</div>
-				<div class="flex flex-col w-40">
-					<label for="tax">Tax</label>
-					<input bind:value={tax} name="tax" type="text" />
-				</div>
-				<div class="flex flex-col w-40">
-					<label for="discount">Discount</label>
-					<input bind:value={discount} name="discount" type="text" />
-				</div>
-				<div class="flex flex-col w-40">
-					<label for="shipping-fee">Shipping fee</label>
-					<input bind:value={shippingFee} name="shipping-fee" type="text" />
-				</div>
-				<div class="flex flex-col w-40">
-					<label for="currency">Currency</label>
-					<input bind:value={currency} name="currency" type="text" />
-				</div>
-			</div>
 		</div>
 	</fieldset>
-	<input type="submit" value="Submit" />
+
+	<fieldset class="border border-blue border-solid">
+		<legend>Items</legend>
+		<table>
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>Name</th>
+					<th>Quantity</th>
+					<th>Unit Price</th>
+					<th>Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#if billingItems.length > 0}
+					{#each billingItems as item}
+						<tr class="">
+							<td>{item.name}</td>
+							<td>{item.quantity}</td>
+							<td>{item.unitPrice}</td>
+							<td>{item.quantity * item.unitPrice}</td>
+						</tr>
+					{/each}
+				{:else}
+					<tr>
+						<td colspan="4">There is no data yet</td>
+					</tr>
+				{/if}
+			</tbody>
+		</table>
+
+		<form bind:this={addItemForm} on:submit|preventDefault={addItem}>
+			<input required bind:this={itemNameInput} type="text" placeholder="Name" />
+			<input required type="number" bind:this={itemQuantityInput} placeholder="Quantity" />
+			<input
+				required
+				type="number"
+				step=".01"
+				bind:this={itemUnitPriceInput}
+				placeholder="Unit price"
+			/>
+
+			<input type="submit" value="Add" />
+		</form>
+	</fieldset>
+
+	<input type="submit" value="Create" />
 </form>
 
 <style>
 	input {
-		@apply border-gray-100 border-solid border;
+		@apply border-gray-100 border-solid border rounded-lg py-2 px-3;
+	}
+	input:focus {
+		@apply outline-dotted;
 	}
 </style>
