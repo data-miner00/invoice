@@ -1,6 +1,11 @@
 ## Docs for Reference
 
 - [Svelte](https://svelte.dev/docs/introduction)
+- [TailwindCSS](https://tailwindcss.com/)
+- [daisyUI](https://daisyui.com/)
+- [Prisma](https://www.prisma.io/docs)
+- [Hasura](https://hasura.io/)
+- [Currency Codes](https://www.iban.com/currency-codes)
 
 ## Repo for Reference
 

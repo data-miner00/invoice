@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export const load = () => {
 	const invoices = [
 		{
@@ -5,6 +7,6 @@ export const load = () => {
 			purchaseNo: '123'
 		}
 	];
-
+	console.log(crypto.randomUUID());
 	return { invoices };
 };

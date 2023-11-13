@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String          @id @default(uuid())
+  username    String          @unique
+  firstName   String
+  lastName    String
+  phoneNo     String
+  role        String          @default("user")
+  password    String
+  bankAccount BankAccount?
+  preference  UserPreference?
+  address     Address?
+}
+
+model BankAccount {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String   @unique
+  bankName      String
+  accountHolder String
+  accountNo     String
+  bankCountry   String
+  createdAt     DateTime @default(now())
+  modifiedAt    DateTime @updatedAt
+}
+
+model UserPreference {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String   @unique
+  invoiceFormat String
+  taxRate       Float    @default(0.00)
+  theme         String   @default("system")
+  createdAt     DateTime @default(now())
+  modifiedAt    DateTime @updatedAt
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?   @unique
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @unique
+  name       String?
+  street1    String?
+  street2    String?
+  city       String?
+  state      String?
+  postcode   String?
+  country    String?
+  shortened  String?
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+}
+
+model Customer {
+  id         String   @id @default(uuid())
+  firstName  String
+  lastName   String
+  email      String?
+  phoneNo    String?
+  address    Address?
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+}
+
+model Currency {
+  isoCode        String  @id
+  name           String
+  country        String
+  symbol         String?
+  symbolPosition String
+}
+
+model InvoiceItem {
+  id        String  @id @default(uuid())
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId Int
+  name      String
+  quantity  Int     @default(1)
+  unitPrice Float
+  amount    Float
+}
+
+model Invoice {
+  id                   Int           @id @default(autoincrement())
+  invoiceNo            String        @unique
+  issuerName           String
+  taxRate              Float
+  discount             Float
+  grandTotal           Float
+  currencyIso          String
+  notes                String?
+  receiverName         String
+  receiverShortAddress String
+  receiverPhoneNo      String
+  invoiceItems         InvoiceItem[]
+  dateIssued           DateTime      @default(now())
+}

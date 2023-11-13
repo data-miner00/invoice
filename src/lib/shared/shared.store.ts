@@ -1,5 +1,6 @@
 import { writable, type Writable, derived } from 'svelte/store';
 import type { BillingItem, BillingRecipient, Company, Individual, Invoice } from './shared.types';
+import type { User } from '@prisma/client';
 
 export const invoice$: Writable<Invoice> = writable<Invoice>({
 	invoiceNo: {
@@ -98,3 +99,5 @@ export const items$: Writable<BillingItem[]> = writable<BillingItem[]>([
 		unitPrice: 200
 	}
 ]);
+
+export const loggedInUser$: Writable<User> = writable<User>();

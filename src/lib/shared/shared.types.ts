@@ -70,3 +70,9 @@ export type Amount = {
 	amount: number;
 	mode: 'percentage' | 'literal';
 };
+
+export enum UserRole {
+	Administrator,
+	User,
+	Guest
+}
