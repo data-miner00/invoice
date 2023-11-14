@@ -23,7 +23,8 @@ async function main() {
 				create: {
 					invoiceFormat: 'A%.4f',
 					taxRate: 0.01,
-					theme: 'light'
+					theme: 'light',
+					currencyIso: 'MYR'
 				}
 			},
 			address: {
@@ -130,7 +131,6 @@ main()
 	.then(async () => {
 		await prisma.$disconnect();
 	})
-
 	.catch(async (e) => {
 		console.error(e);
 		await prisma.$disconnect();

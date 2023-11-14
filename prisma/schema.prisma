@@ -42,6 +42,7 @@ model UserPreference {
   invoiceFormat String
   taxRate       Float    @default(0.00)
   theme         String   @default("system")
+  currencyIso   String   @default("MYR")
   createdAt     DateTime @default(now())
   modifiedAt    DateTime @updatedAt
 }
