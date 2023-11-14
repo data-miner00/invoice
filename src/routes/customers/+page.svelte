@@ -1,4 +1,13 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+
+	onMount(() => {
+		console.log(data.customers);
+	});
+
 	type SampleData = {
 		avatar: string;
 		name: string;
@@ -42,6 +51,16 @@
 			favoriteColor: 'Purple'
 		}
 	];
+
+	let dialogRef: HTMLDialogElement;
+
+	function openDialog() {
+		dialogRef.showModal();
+	}
+
+	function closeDialog() {
+		dialogRef.close();
+	}
 </script>
 
 <div class="p-4 flex gap-4">
@@ -105,4 +124,62 @@
 			</tfoot>
 		</table>
 	</div>
+
+	<button class="btn" on:click={openDialog}>Add Customer</button>
+	<dialog bind:this={dialogRef} id="add_customer" class="modal">
+		<div class="modal-box w-11/12 max-w-2xl">
+			<h3 class="font-bold text-lg">Add a customer</h3>
+			<p class="py-4">Press ESC key or click the button below to close</p>
+
+			<form method="POST">
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="first_name">
+						<span class="label-text">First name</span>
+					</label>
+					<input
+						name="first_name"
+						type="text"
+						placeholder="Type here"
+						class="input input-bordered w-full max-w-xs"
+					/>
+				</div>
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="last_name">
+						<span class="label-text">Last name</span>
+					</label>
+					<input
+						name="last_name"
+						type="text"
+						placeholder="Type here"
+						class="input input-bordered w-full max-w-xs"
+					/>
+				</div>
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="email">
+						<span class="label-text">Email</span>
+					</label>
+					<input
+						name="email"
+						type="email"
+						placeholder="Type here"
+						class="input input-bordered w-full max-w-xs"
+					/>
+				</div>
+				<div class="form-control w-full max-w-xs">
+					<label class="label" for="phone">
+						<span class="label-text">Phone</span>
+					</label>
+					<input
+						name="phone"
+						type="text"
+						placeholder="Type here"
+						class="input input-bordered w-full max-w-xs"
+					/>
+				</div>
+				<div class="modal-action">
+					<button class="btn btn-primary" on:click={closeDialog}> Add Customer </button>
+				</div>
+			</form>
+		</div>
+	</dialog>
 </div>
