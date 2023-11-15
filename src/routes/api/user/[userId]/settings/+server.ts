@@ -22,7 +22,7 @@ export const POST: RequestHandler = async ({ request, params }) => {
 
 		return json({ updatedSettings });
 	} catch (e) {
-		throw error(500, 'something bad happened');
+		throw error(500, `something bad happened: ${JSON.stringify(e)}`);
 	}
 };
 
