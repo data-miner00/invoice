@@ -1,9 +1,3 @@
-/*
-  Warnings:
-
-  - Added the required column `modifiedAt` to the `User` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- RedefineTables
 PRAGMA foreign_keys=OFF;
 CREATE TABLE "new_User" (
@@ -17,7 +11,7 @@ CREATE TABLE "new_User" (
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "modifiedAt" DATETIME NOT NULL
 );
-INSERT INTO "new_User" ("firstName", "id", "lastName", "password", "phoneNo", "role", "username") SELECT "firstName", "id", "lastName", "password", "phoneNo", "role", "username" FROM "User";
+INSERT INTO "new_User" ("createdAt", "firstName", "id", "lastName", "modifiedAt", "password", "phoneNo", "role", "username") SELECT "createdAt", "firstName", "id", "lastName", "modifiedAt", "password", "phoneNo", "role", "username" FROM "User";
 DROP TABLE "User";
 ALTER TABLE "new_User" RENAME TO "User";
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
