@@ -1,0 +1,9 @@
+node_modules
+.svelte-kit
+.git
+.gitignore
+build
+*.md
+docs
+.vscode
+db.sqlite
