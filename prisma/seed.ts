@@ -11,6 +11,7 @@ async function main() {
 			phoneNo: '+60123456789',
 			role: 'admin',
 			password: 'password123',
+			email: 'alice@gmail.com',
 			bankAccount: {
 				create: {
 					bankName: 'Maybank',

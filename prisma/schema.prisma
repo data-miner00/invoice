@@ -21,6 +21,7 @@ model User {
   bankAccount BankAccount?
   preference  UserPreference?
   address     Address?
+  email       String
   createdAt   DateTime        @default(now())
   modifiedAt  DateTime        @updatedAt
 }
