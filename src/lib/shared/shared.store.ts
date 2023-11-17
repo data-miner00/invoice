@@ -1,5 +1,12 @@
 import { writable, type Writable, derived } from 'svelte/store';
-import type { BillingItem, BillingRecipient, Company, Individual, Invoice } from './shared.types';
+import type {
+	Notification,
+	BillingItem,
+	BillingRecipient,
+	Company,
+	Individual,
+	Invoice
+} from './shared.types';
 import type { User } from '@prisma/client';
 
 export const invoice$: Writable<Invoice> = writable<Invoice>({
@@ -101,3 +108,14 @@ export const items$: Writable<BillingItem[]> = writable<BillingItem[]>([
 ]);
 
 export const loggedInUser$: Writable<User> = writable<User>();
+
+export const notifications$: Writable<Notification[]> = writable<Notification[]>([]);
+
+export function addNotification(notification: Notification) {
+	notifications$.update((state) => [notification, ...state]);
+	setTimeout(removeNotification, 2000);
+}
+
+function removeNotification() {
+	notifications$.update((state) => [...state.slice(1, state.length - 1)]);
+}

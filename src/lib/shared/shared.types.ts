@@ -76,3 +76,9 @@ export enum UserRole {
 	User,
 	Guest
 }
+
+// UI Types
+export type Notification = {
+	text: string;
+	type: 'success' | 'error';
+};

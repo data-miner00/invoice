@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import { ChevronRightIcon } from '$lib/shared/icons';
 	import { onMount } from 'svelte';
+	import { addNotification } from '$lib/shared/shared.store';
 
 	export let data: PageData;
 	let settings = data.settings;
@@ -51,23 +52,28 @@
 	}
 
 	async function updateSettings() {
-		const userId = 'c74d900f-5161-48d4-97bc-388a6bb761c3';
+		const userId = '9a6884a7-2f2b-4ced-8d39-4f8a0725cbdf';
 
-		const response = await fetch(`/api/user/${userId}/settings`, {
-			method: 'POST',
-			body: JSON.stringify(<SettingsViewModel>{
-				taxRate: taxRateInput,
-				theme: themeInput,
-				currency: currencyInput,
-				invoiceFormat: formatInput
-			}),
-			headers: {
-				'content-type': 'application/json'
-			}
-		});
+		try {
+			const response = await fetch(`/api/user/${userId}/settings`, {
+				method: 'POST',
+				body: JSON.stringify(<SettingsViewModel>{
+					taxRate: taxRateInput,
+					theme: themeInput,
+					currency: currencyInput,
+					invoiceFormat: formatInput
+				}),
+				headers: {
+					'content-type': 'application/json'
+				}
+			});
 
-		const updatedSettings = await response.json();
-		console.log(updatedSettings);
+			const updatedSettings = await response.json();
+			console.log(updatedSettings);
+			addNotification({ text: 'Successfuly updated settings', type: 'success' });
+		} catch (e) {
+			addNotification({ text: 'Failed to update settings', type: 'error' });
+		}
 	}
 </script>
 
@@ -105,7 +111,10 @@
 	</section>
 
 	{#if selected}
-		<form class="p-4 w-[400px] border-r border-solid border-gray-100">
+		<form
+			on:submit|preventDefault={updateSettings}
+			class="p-4 w-[400px] border-r border-solid border-gray-100"
+		>
 			{#if selected === 'tax'}
 				<h2 class="text-xl font-semibold mb-2">Tax Rate</h2>
 
@@ -144,11 +153,7 @@
 					class="input input-bordered w-full max-w-xs"
 				/>
 			{/if}
-			<button
-				on:click={updateSettings}
-				class={`mt-4 btn ${settingsChanged ?? 'btn-primary'}`}
-				disabled={!settingsChanged}
-			>
+			<button class={`mt-4 btn ${settingsChanged ?? 'btn-primary'}`} disabled={!settingsChanged}>
 				Update
 			</button>
 		</form>
