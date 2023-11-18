@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
 	import UpdateProfileForm from '$lib/modules/forms/update-profile-form.svelte';
+	import UpdateAddressForm from '$lib/modules/forms/update-address-form.svelte';
+	import UpdateBankForm from '$lib/modules/forms/update-bank-form.svelte';
 
 	export let data: PageData;
 
@@ -10,9 +11,8 @@
 	let bankAccount = data.bankAccount;
 
 	let profileDialog: UpdateProfileForm;
-
-	let addressDialogRef: HTMLDialogElement;
-	let bankDialogRef: HTMLDialogElement;
+	let addressDialog: UpdateAddressForm;
+	let bankDialog: UpdateBankForm;
 </script>
 
 <section class="px-4">
@@ -48,6 +48,7 @@
 	<div class="divider" />
 
 	<h2 class="text-2xl font-bold mb-4">Address</h2>
+	<button class="btn" on:click={() => addressDialog.showDialog()}>Edit Address</button><br />
 
 	<label for="current-email" class="font-semibold">Id</label>
 	<div>{address?.id ?? 'N/A'}</div>
@@ -64,7 +65,7 @@
 	<div>{address?.state ?? 'N/A'}</div>
 	<label for="current-email" class="font-semibold">Postcode</label>
 	<div>{address?.postcode ?? 'N/A'}</div>
-	<label for="current-email" class="font-semibold">Street 2</label>
+	<label for="current-email" class="font-semibold">Country</label>
 	<div>{address?.country ?? 'N/A'}</div>
 	<label for="current-email" class="font-semibold">Shortened</label>
 	<div>{address?.shortened ?? 'N/A'}</div>
@@ -76,6 +77,7 @@
 	<div class="divider" />
 
 	<h2 class="text-2xl font-bold mb-4">Bank Account</h2>
+	<button class="btn" on:click={() => bankDialog.showDialog()}>Edit Bank</button><br />
 
 	<label for="current-email" class="font-semibold">Id</label>
 	<div>{bankAccount?.id ?? 'N/A'}</div>
@@ -107,4 +109,27 @@
 	email={profile?.email ?? ''}
 	phoneNo={profile?.phoneNo ?? ''}
 	password={profile?.password ?? ''}
+/>
+
+<UpdateAddressForm
+	bind:this={addressDialog}
+	actionUrl="?/address"
+	addressId={address?.id ?? ''}
+	street1={address?.street1 ?? ''}
+	street2={address?.street2 ?? ''}
+	city={address?.city ?? ''}
+	state={address?.state ?? ''}
+	postcode={address?.postcode ?? ''}
+	country={address?.country ?? ''}
+	shortened={address?.shortened ?? ''}
+/>
+
+<UpdateBankForm
+	bind:this={bankDialog}
+	actionUrl="?/bank"
+	bankRecordId={bankAccount?.id ?? ''}
+	bankName={bankAccount?.bankName ?? ''}
+	bankCountry={bankAccount?.bankCountry ?? ''}
+	accountHolder={bankAccount?.accountHolder ?? ''}
+	accountNo={bankAccount?.accountNo ?? ''}
 />

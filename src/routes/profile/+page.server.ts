@@ -37,7 +37,6 @@ export const actions = {
 			return fail(400, { message: 'bad input ' });
 		}
 
-		console.log(id);
 		try {
 			const updatedUser = await prisma.user.update({
 				where: {
@@ -52,8 +51,79 @@ export const actions = {
 					email
 				}
 			});
-			console.log(updatedUser);
+
 			return updatedUser;
+		} catch (e) {
+			throw error(500, `Error occurred: ${JSON.stringify(e)}`);
+		}
+	},
+	address: async ({ cookies, request }) => {
+		const data = await request.formData();
+		const id = data.get('id')?.toString();
+		const street1 = data.get('street1')?.toString();
+		const street2 = data.get('street2')?.toString();
+		const city = data.get('city')?.toString();
+		const state = data.get('state')?.toString();
+		const postcode = data.get('postcode')?.toString();
+		const country = data.get('country')?.toString();
+		const shortened = data.get('shortened')?.toString();
+
+		if (!id || !street1 || !street2 || !city || !state || !postcode || !country || !shortened) {
+			return fail(400, { message: 'bad input ' });
+		}
+
+		try {
+			var get = await prisma.address.findFirst({
+				where: { id }
+			});
+
+			console.log(get);
+			const updatedAddress = await prisma.address.update({
+				where: {
+					id
+				},
+				data: {
+					street1,
+					street2,
+					city,
+					country,
+					state,
+					postcode,
+					shortened
+				}
+			});
+
+			return updatedAddress;
+		} catch (e) {
+			throw error(500, `Error occurred: ${JSON.stringify(e)}`);
+		}
+	},
+	bank: async ({ cookies, request }) => {
+		const data = await request.formData();
+		const id = data.get('id')?.toString();
+		const bankName = data.get('bankName')?.toString();
+		const bankCountry = data.get('bankCountry')?.toString();
+		const accountHolder = data.get('accountHolder')?.toString();
+		const accountNo = data.get('accountNo')?.toString();
+
+		if (!id || !bankName || !bankCountry || !accountHolder || !accountNo) {
+			return fail(400, { message: 'bad input ' });
+		}
+
+		try {
+			const updatedBank = await prisma.bankAccount.update({
+				where: {
+					id
+				},
+				data: {
+					bankName,
+					bankCountry,
+					accountHolder,
+					accountNo
+				}
+			});
+
+			return updatedBank;
 		} catch (e) {
 			throw error(500, `Error occurred: ${JSON.stringify(e)}`);
 		}
