@@ -1,56 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
-	onMount(() => {
-		console.log(data.customers);
-	});
-
-	type SampleData = {
-		avatar: string;
-		name: string;
-		company: string;
-		country: string;
-		job: string;
-		favoriteColor: string;
-	};
-
-	let samples: SampleData[] = [
-		{
-			avatar: 'https://daisyui.com/tailwind-css-component-profile-2@56w.png',
-			name: 'Hart Hagerty',
-			country: 'United States',
-			company: 'Zemlak, Daniel and Leannon',
-			job: 'Desktop Support Technician',
-			favoriteColor: 'Purple'
-		},
-		{
-			avatar: 'https://daisyui.com/tailwind-css-component-profile-3@56w.png',
-			name: 'Hart Hagerty',
-			country: 'United States',
-			company: 'Zemlak, Daniel and Leannon',
-			job: 'Desktop Support Technician',
-			favoriteColor: 'Purple'
-		},
-		{
-			avatar: 'https://daisyui.com/tailwind-css-component-profile-4@56w.png',
-			name: 'Hart Hagerty',
-			country: 'United States',
-			company: 'Zemlak, Daniel and Leannon',
-			job: 'Desktop Support Technician',
-			favoriteColor: 'Purple'
-		},
-		{
-			avatar: 'https://daisyui.com/tailwind-css-component-profile-5@56w.png',
-			name: 'Hart Hagerty',
-			country: 'United States',
-			company: 'Zemlak, Daniel and Leannon',
-			job: 'Desktop Support Technician',
-			favoriteColor: 'Purple'
-		}
-	];
 
 	let dialogRef: HTMLDialogElement;
 
@@ -64,61 +15,55 @@
 </script>
 
 <div class="p-4 flex gap-4">
-	<div class="w-[400px] bg-gray-50 rounded-xl" />
-	<div class="overflow-x-auto flex-1">
+	<div class="overflow-x-auto max-w-screen-xl p-4 border border-solid border-gray-100">
 		<table class="table">
 			<thead>
 				<tr>
-					<th>
-						<label>
-							<input type="checkbox" class="checkbox" />
-						</label>
-					</th>
 					<th>Name</th>
-					<th>Job</th>
-					<th>Favorite Color</th>
+					<th>Contacts</th>
+					<th>Address</th>
+					<th>Created At</th>
 					<th />
 				</tr>
 			</thead>
 			<tbody>
-				{#each samples as sample}
+				{#each data.customers as customer (customer.id)}
 					<tr>
-						<th>
-							<label>
-								<input type="checkbox" class="checkbox" />
-							</label>
-						</th>
 						<td>
 							<div class="flex items-center space-x-3">
 								<div class="avatar">
 									<div class="mask mask-squircle w-12 h-12">
-										<img src={sample.avatar} alt="Avatar Tailwind CSS Component" />
+										<img
+											src="https://daisyui.com/tailwind-css-component-profile-2@56w.png"
+											alt="Avatar Tailwind CSS Component"
+										/>
 									</div>
 								</div>
 								<div>
-									<div class="font-bold">{sample.name}</div>
-									<div class="text-sm opacity-50">{sample.country}</div>
+									<div class="font-bold">{customer.firstName} {customer.lastName}</div>
+									<div class="text-sm opacity-50">Ulm, Germany</div>
 								</div>
 							</div>
 						</td>
 						<td>
-							{sample.company}
+							{customer.email}
 							<br />
-							<span class="badge badge-ghost badge-sm">{sample.job}</span>
+							<span class="badge badge-ghost badge-sm">{customer.phoneNo}</span>
 						</td>
-						<td>{sample.favoriteColor}</td>
-						<th>
+						<td>{customer.address?.shortened}</td>
+						<td>{customer.createdAt.toDateString()}</td>
+						<td>
 							<button class="btn btn-ghost btn-xs">details</button>
-						</th>
+						</td>
 					</tr>
 				{/each}
 			</tbody>
 			<tfoot>
 				<tr>
-					<th />
 					<th>Name</th>
-					<th>Job</th>
-					<th>Favorite Color</th>
+					<th>Contacts</th>
+					<th>Address</th>
+					<th>Created At</th>
 					<th />
 				</tr>
 			</tfoot>
@@ -131,7 +76,7 @@
 			<h3 class="font-bold text-lg">Add a customer</h3>
 			<p class="py-4">Press ESC key or click the button below to close</p>
 
-			<form method="POST">
+			<form method="POST" on:submit={closeDialog}>
 				<fieldset class="p-4 flex flex-wrap gap-4 border border-solid border-gray-100">
 					<legend>Basic Info</legend>
 
@@ -271,7 +216,7 @@
 				</fieldset>
 
 				<div class="modal-action">
-					<button class="btn btn-primary" on:click={closeDialog}> Add Customer </button>
+					<button class="btn btn-primary"> Add Customer </button>
 				</div>
 			</form>
 		</div>

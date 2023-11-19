@@ -2,8 +2,16 @@ import type { PageServerLoad, Actions } from '../$types';
 import { fail, error } from '@sveltejs/kit';
 import prisma from '$lib/prisma';
 
+const validateEmail = (email: string) => {
+	return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+};
+
 export const load: PageServerLoad = async ({ cookies }) => {
-	const customers = await prisma.customer.findMany();
+	const customers = await prisma.customer.findMany({
+		include: {
+			address: true
+		}
+	});
 
 	return { customers };
 };
@@ -25,6 +33,10 @@ export const actions = {
 
 		if (!firstName || !lastName || !email || !phoneNo) {
 			return fail(400, { message: 'bad input' });
+		}
+
+		if (!validateEmail(email)) {
+			return fail(400, { message: 'Invalid email' });
 		}
 
 		try {
