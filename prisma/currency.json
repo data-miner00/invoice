@@ -1,0 +1,16 @@
+[
+	{
+		"name": "Malaysian Ringgit",
+		"country": "Malaysia",
+		"symbol": "RM",
+		"symbol_position": "left",
+		"iso_code": "MYR"
+	},
+	{
+		"name": "US Dollar",
+		"country": "United States",
+		"symbol": "$",
+		"symbol_position": "left",
+		"iso_code": "USD"
+	}
+]

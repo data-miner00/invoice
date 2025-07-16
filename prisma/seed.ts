@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import currencies from './currency.json';
 
 var prisma = new PrismaClient();
 
@@ -49,17 +50,19 @@ async function main() {
 
 	console.log(`Root user created: ${rootUser}`);
 
-	var currency = await prisma.currency.create({
-		data: {
-			isoCode: 'MYR',
-			name: 'Malaysian Ringgit',
-			country: 'Malaysia',
-			symbol: 'RM',
-			symbolPosition: 'left'
-		}
-	});
+	for (const currency of currencies) {
+		await prisma.currency.create({
+			data: {
+				isoCode: currency.iso_code,
+				name: currency.name,
+				country: currency.country,
+				symbol: currency.symbol,
+				symbolPosition: currency.symbol_position
+			}
+		});
 
-	console.log(`Currency created: ${currency}`);
+		console.log(`Currency created: ${currency.name} (${currency.iso_code})`);
+	}
 
 	var customer = await prisma.customer.create({
 		data: {
