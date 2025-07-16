@@ -22,6 +22,7 @@
 				<li><a href="/invoice">Invoice</a></li>
 				<li><a href="/customers">Customers</a></li>
 				<li><a href="/create">Create</a></li>
+				<li><a href="/history">History</a></li>
 			</ul>
 		</details>
 	</div>
