@@ -33,7 +33,7 @@
 								</div>
 								<div>
 									<div class="font-bold">{customer.firstName} {customer.lastName}</div>
-									<div class="text-sm opacity-50">Ulm, Germany</div>
+									<div class="text-sm opacity-50">{customer.address?.country}</div>
 								</div>
 							</div>
 						</td>
