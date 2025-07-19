@@ -45,7 +45,7 @@
 						<td>{customer.address?.shortened}</td>
 						<td>{customer.createdAt.toDateString()}</td>
 						<td>
-							<button class="btn btn-ghost btn-xs">details</button>
+							<a class="btn btn-ghost btn-xs" href={'customers/' + customer.id}>details</a>
 						</td>
 					</tr>
 				{/each}
