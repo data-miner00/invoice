@@ -42,10 +42,17 @@
 		isEntryInputOpen = !isEntryInputOpen;
 	}
 
+	let nameInputElement: HTMLInputElement;
+	let quantityInputElement: HTMLInputElement;
+	let unitPriceInputElement: HTMLInputElement;
+
 	function resetInput() {
 		newItemName = '';
 		newItemQuantity = 0;
 		newItemUnitPrice = 0;
+		nameInputElement.value = '';
+		quantityInputElement.value = '';
+		unitPriceInputElement.value = '';
 	}
 
 	function editItem() {}
@@ -99,7 +106,11 @@
 						<td>{item.name}</td>
 						<td>{item.quantity}</td>
 						<td><span>{$invoice$.currency.symbol}</span>{item.unitPrice}</td>
-						<td><span>{$invoice$.currency.symbol}</span>{item.quantity * item.unitPrice}</td>
+						<td
+							><span>{$invoice$.currency.symbol}</span>{(item.quantity * item.unitPrice).toFixed(
+								2
+							)}</td
+						>
 						{#if isEditing}
 							<div class="entry-actions">
 								<button on:click={editItem}><CheckIcon size={20} /></button>
@@ -120,6 +131,8 @@
 									on:input={(e) => {
 										newItemName = e.currentTarget.value;
 									}}
+									bind:this={nameInputElement}
+									required
 								/>
 							</td>
 							<td>
@@ -129,6 +142,8 @@
 									on:input={(e) => {
 										newItemQuantity = e.currentTarget.valueAsNumber;
 									}}
+									bind:this={quantityInputElement}
+									required
 								/>
 							</td>
 							<td>
@@ -139,9 +154,12 @@
 									on:input={(e) => {
 										newItemUnitPrice = e.currentTarget.valueAsNumber;
 									}}
+									bind:this={unitPriceInputElement}
+									required
+									step="0.01"
 								/>
 							</td>
-							<td><span>{$invoice$.currency.symbol}</span>{newItemTotalPrice}</td>
+							<td><span>{$invoice$.currency.symbol}</span>{newItemTotalPrice.toFixed(2)}</td>
 							<div class="input-group-control">
 								<button on:click={addItem}><CheckIcon size={20} /></button>
 								<button on:click={toggleEntryInput}><CrossIcon size={18} /></button>
@@ -162,7 +180,7 @@
 					<td />
 					<td />
 					<td class="subtotal">Subtotal</td>
-					<td><span>{$invoice$.currency.symbol}</span>{subtotal}</td>
+					<td><span>{$invoice$.currency.symbol}</span>{subtotal.toFixed(2)}</td>
 				</tr>
 				<tr>
 					<td />
@@ -174,7 +192,7 @@
 					<td />
 					<td />
 					<td class="total">Total</td>
-					<td class="total">{$invoice$.currency.symbol}{total}</td>
+					<td class="total">{$invoice$.currency.symbol}{total.toFixed(2)}</td>
 				</tr>
 			</tbody>
 		</table>
