@@ -75,6 +75,8 @@ model Customer {
   email      String?
   phoneNo    String?
   address    Address?
+  avatarUrl  String?
+  company    String?
   createdAt  DateTime @default(now())
   modifiedAt DateTime @updatedAt
 }
