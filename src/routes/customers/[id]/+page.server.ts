@@ -21,8 +21,8 @@ export const actions = {
 	customer: async ({ cookies, request }) => {
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
-		const firstName = data.get('firstName')?.toString();
-		const lastName = data.get('lastName')?.toString();
+		const firstName = data.get('first_name')?.toString();
+		const lastName = data.get('last_name')?.toString();
 		const email = data.get('email')?.toString();
 		const phoneNo = data.get('phone')?.toString();
 

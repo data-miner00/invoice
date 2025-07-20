@@ -1,9 +1,12 @@
 <script lang="ts">
+	import UpdateCustomerForm from '$lib/modules/forms/update-customer-form.svelte';
 	import type { PageData } from './$types'; // Very important to import as type!!
 
 	export let data: PageData;
 
 	let customer = data.customer;
+
+	let customerDialog: UpdateCustomerForm;
 </script>
 
 <div class="p-4">
@@ -30,5 +33,17 @@
 		{customer?.createdAt.toDateString()}
 	</div>
 
-	<button class="btn btn-secondary">Edit</button>
+	<button class="btn btn-secondary" on:click={() => customerDialog.showCustomerDialog()}
+		>Edit</button
+	>
 </div>
+
+<UpdateCustomerForm
+	bind:this={customerDialog}
+	customerId={customer?.id ?? ''}
+	actionUrl="?/customer"
+	firstName={customer?.firstName ?? ''}
+	lastName={customer?.lastName ?? ''}
+	email={customer?.email ?? ''}
+	phoneNo={customer?.phoneNo ?? ''}
+/>
